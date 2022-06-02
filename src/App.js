@@ -7,7 +7,7 @@ function App() {
   // logic to get the username
   const [posts, setPosts] = useState([]);
   const url = "http://hn.algolia.com/api/v1/search_by_date";
-  const [tag, setTag] = "x";
+  const [tag, setTag] = useState("");
   const urlSearch = `http://hn.algolia.com/api/v1/search?query=${tag}`;
   useEffect(() => {
     fetch(url)
@@ -20,9 +20,18 @@ function App() {
       .catch((error) => console.log(error));
   }, []);
   console.log(posts);
+  const submitHandler = () => {
+    console.log("hadnler geht");
+  };
 
   return (
     <div className="App">
+      <input
+        onSubmit={submitHandler}
+        type="text"
+        placeholder="What do you wanna look for?"
+      />
+
       {posts.map((post) => (
         <div>
           <span>{post.author}</span>
