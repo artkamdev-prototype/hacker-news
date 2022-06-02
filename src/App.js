@@ -9,6 +9,7 @@ function App() {
   const url = "http://hn.algolia.com/api/v1/search_by_date";
   const [tag, setTag] = useState("");
   const urlSearch = `http://hn.algolia.com/api/v1/search?query=${tag}`;
+  console.log(urlSearch);
   useEffect(() => {
     fetch(url)
       .then((response) => {
@@ -19,15 +20,32 @@ function App() {
       .then((json) => setPosts(json.hits))
       .catch((error) => console.log(error));
   }, []);
-  console.log(posts);
-  const submitHandler = () => {
-    console.log("hadnler geht");
+  //console.log(posts);
+  const submitHandler = (e) => {
+    //console.log(e.key);
+    if (e.key !== "Enter") return;
+
+    const searchTag = e.target.value;
+    //console.log(searchTag);
+    setTag(searchTag);
+    e.target.value = "";
   };
+  console.log(tag);
+  useEffect(() => {
+    fetch(urlSearch)
+      .then((response) => {
+        // console.log(response.json());
+        return response.ok && response.json();
+      })
+
+      .then((json) => setPosts(json.hits))
+      .catch((error) => console.log(error));
+  }, [tag]);
 
   return (
     <div className="App">
       <input
-        onSubmit={submitHandler}
+        onKeyDown={submitHandler}
         type="text"
         placeholder="What do you wanna look for?"
       />
@@ -37,7 +55,7 @@ function App() {
           <span>{post.author}</span>
           <br />
           <span>{post.created_at}</span>
-          <p> {post.comment_text}</p>
+          <p> {post.title}</p>
         </div>
       ))}
     </div>
